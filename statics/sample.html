@@ -1,0 +1,47 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>Tinder</title>
+</head>
+
+<body>
+  <div id="form1" name="form1">
+    <!--/* send by Javascript */-->
+    <input type="submit" value="LIKE" onclick="send(1)" />
+    <input type="submit" value="UN::LIKE" onclick="send(0)" />
+  </div>
+  <div id="edit_area">
+  <p>title name</p>
+    <img src="data/images/thumb.png" alt="" width="500" height="600">
+  </div>
+
+
+<script type="text/javascript">
+var id = 0;
+function send(e) {
+  var data = {"id": id, "evaluation": e};
+  console.log("Received from html: ", data);
+
+  fetch("/receive?id=" + data.id + "&evaluation=" + e, {
+    method: "POST",
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log("Request complete! response:", data);
+    console.log("id updated," + id + " to ", data.id);
+    id = data.id;
+
+    var name = data.name
+    if (name == undefined) {
+      name = "ファイル群評価終了"
+    }
+    var str = '<p>' + name +'</p><img src="data/images/' + data.name + '" alt="" height="90%">';
+    document.getElementById('edit_area').innerHTML = str;
+  });
+}
+
+</script>
+
+</body>
+
+</html>
